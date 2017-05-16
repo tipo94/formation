@@ -12,9 +12,9 @@ class Database
 
 		$this->pdo = new PDO
 		(
-			$configuration->get('database', 'dsn'),
-			$configuration->get('database', 'user'),
-			$configuration->get('database', 'password')
+			'mysql:host=localhost;dbname=cupoftea',
+			'root',
+			'troiswa'
 		);
 
 		$this->pdo->exec('SET NAMES UTF8');
