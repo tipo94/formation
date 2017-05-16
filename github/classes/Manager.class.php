@@ -42,7 +42,7 @@ class Manager{
 
 
 		$models=scandir(__DIR__."/../Models/");
-
+		include __DIR__."/../classes/Database.class.php";
 
 		foreach ($models as $model) {
 			if($model!='.' AND $model!='..'){
