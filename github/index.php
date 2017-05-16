@@ -7,5 +7,7 @@ include __DIR__."/classes/Manager.class.php";
 
 $manager= new Manager();
 
+$manager->loadModels();
+
 $manager->controllerCheck();
 
