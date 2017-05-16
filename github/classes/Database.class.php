@@ -8,7 +8,7 @@ class Database
 
 	public function __construct()
 	{
-		$configuration = new Configuration();
+		
 
 		$this->pdo = new PDO
 		(
