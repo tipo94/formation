@@ -38,4 +38,18 @@ class Manager{
 		}
 	}
 
+	function loadModels(){
+
+
+		$models=scandir(__DIR__."/../Models/");
+
+
+		foreach ($models as $model) {
+			if($model!='.' AND $model!='..'){
+
+				include __DIR__."/../Models/".$model;
+			}
+		}
+	}
+
 }
