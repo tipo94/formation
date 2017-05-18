@@ -14,8 +14,22 @@ class Login{
 
 	public function httpPostMethod(){
 
-		$view= new Template();
+		try{
 
-		$view->loadView('login');
+			$userModel = new UserModel();
+
+			$userModel->signIn($_POST['email'], $_POST['password']);
+
+			header('location:'.$_SERVER['SCRIPT_NAME']);
+			exit();
+		}
+		catch(Exception $e){
+
+			echo $e->getMessage();
+
+			$view= new Template();
+
+			$view->loadView('login');
+		}
 	}
 }
