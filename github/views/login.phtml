@@ -1,1 +1,19 @@
-Hello login
+<div class="wrapForm">
+	<form action="<?= $requestUrl;	?>/login" method="POST" />
+
+
+
+		<label for="email" >
+			Email:
+				<input type="text" name="email" />
+		</label>
+
+		<label for="pass" >
+			Password:
+				<input type="text" name="password" />
+		</label>
+		
+
+		<input type="submit" value="S'inscrire" />
+	</form>
+</div>
