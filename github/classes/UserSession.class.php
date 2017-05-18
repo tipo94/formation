@@ -12,14 +12,13 @@ class UserSession
 		}
 	}
 
-    public function create($userId, $firstName, $lastName, $email)
+    public function create($userId, $name, $email)
     {
         // Construction de la session utilisateur.
         $_SESSION['user'] =
         [
             'UserId'    => $userId,
-            'FirstName' => $firstName,
-            'LastName'  => $lastName,
+            'Name' => $name,
             'Email'     => $email
         ];
     }
@@ -41,35 +40,17 @@ class UserSession
         return $_SESSION['user']['Email'];
     }
 
-    public function getFirstName()
+    public function getName()
     {
         if($this->isAuthenticated() == false)
         {
             return null;
         }
 
-        return $_SESSION['user']['FirstName'];
+        return $_SESSION['user']['Name'];
     }
 
-    public function getFullName()
-    {
-        if($this->isAuthenticated() == false)
-        {
-            return null;
-        }
-
-        return $_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName'];
-    }
-
-    public function getLastName()
-    {
-        if($this->isAuthenticated() == false)
-        {
-            return null;
-        }
-
-        return $_SESSION['user']['LastName'];
-    }
+   
 
     public function getUserId()
     {
