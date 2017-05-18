@@ -147,6 +147,13 @@ header nav a:hover {
 }
 
 /* MAIN */
+.helloName{
+
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+	color: green;
+}
 #slider {
 	margin-top: 25px;
 }
@@ -330,6 +337,32 @@ header nav a:hover {
 #column p {
 	padding: 10px;
 }
+
+/* INSCRIPTION */
+.wrapForm{
+
+	position: relative;
+	display: block;
+	width:30%;
+	margin:auto;
+}
+label {
+
+	display: block;
+	width:35%;
+	position: relative;
+}
+
+form{
+
+	margin:50px 50px 50px 50px;
+
+}
+[type="submit"]{
+
+	width:75%;
+}
+
 
 /* FOOTER */
 footer {
