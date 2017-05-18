@@ -47,13 +47,21 @@
 
                 <a href="<?= $requestUrl ?>/about">About Us</a>
 
+                <a href="<?= $requestUrl ?>/login">Connexion</a>
+
+                <a href="<?= $requestUrl ?>/inscription">Inscription</a>
+
             </nav>
         </div>
     </header>
     <!-- Interface utilisateur -->
     <nav class="user-interface">
 
+        <?php $userSession= new UserSession();  ?>
 
+        <?php if($userSession->isAuthenticated()):  ?>
+            <div class="helloName">Hello <?= $userSession->getName();  ?></div>
+        <?php endif;    ?>
     </nav>
 
     <main>
