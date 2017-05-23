@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+	<title>Flappy</title>
+<style>
+	.race{
+
+		width: 100%;
+		position: relative;
+		background: yellow;
+		height: 10em;
+		overflow: hidden;
+	}
+
+	.bird{
+
+		width: 3em;
+		height: 3em;
+		background: grey;
+		position: absolute;
+		top: 10%;
+	}
+	.pipe{
+
+		width: 3em;
+		height: 7em;
+		background: green;
+		position: absolute;
+		right:0;
+	}
+	.pipeTop{
+
+		top: -40%;
+	}
+
+	.pipeBtm{
+
+		bottom:-40%;
+	}
+	
+</style>
+
+</head>
+<body>
+
+
+<div class="race">
+<div class="bird"></div>
+</div>
+
+
+<script>
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+var Bird= function(){
+	this.count=0;
+	this.$bird=$('.bird');
+	this.posX;
+	this.posY;
+	this.timer=0;
+	this.size={width:this.$bird.width(), height:this.$bird.height()}
+	this.moving=false;
+
+}
+Bird.prototype.getPos=function(){
+
+	var pos=this.$bird[0].getBoundingClientRect();
+	
+	this.posX=pos.left;
+	this.posY=pos.top;
+
+}
+Bird.prototype.fly=function(){
+
+this.timer=setInterval(function(){
+	this.getPos();
+	this.count++;
+	if(this.posX+this.size.width<$('.race').width()/2){
+
+		this.$bird.css('margin-left', this.posX+1+'px');
+	}
+	console.log(this.count);
+	if(this.count%3==0 && !this.moving){
+	this.$bird.css('top', parseInt(this.posY+1)+'px');
+}
+}.bind(this),100);
+
+}
+
+var Pipes=function(programm){
+	this.programm=programm;
+	this.pipeTop=$('<div class="pipe pipeTop"></div>');
+	this.pipeBtm=$('<div class="pipe pipeBtm"></div>');
+	this.delta=-40;
+	this.passBird=false;
+	this.posX=0;
+	this.posTopY;
+	this.posBtmY;
+	this.timer=null;
+
+	this.installPipes();
+}
+Pipes.prototype.installPipes=function(){
+	var num= getRandomInt(0,50);
+	this.posTopY=this.delta-num;
+	this.posBtmY=this.delta+num;
+	this.pipeTop.css('top', this.posTopY+'%');
+	this.pipeBtm.css('bottom', this.posBtmY+'%');
+	$('.race').append(this.pipeTop);
+	$('.race').append(this.pipeBtm);
+
+	this.movePipes();
+}
+Pipes.prototype.movePipes=function(){
+	this.timer=setInterval(function(){
+		if(this.posX<$('.race').width()){
+			this.posX++;
+			this.pipeTop.css('margin-right', this.posX+'px');
+			this.pipeBtm.css('margin-right', this.posX+'px');
+
+			this.programm.checkColision(this);
+		}
+		else
+		{
+			clearInterval(this.timer);
+		}
+		}.bind(this),10
+		)
+}
+
+var Programm= function(){
+	this.pipes=[];
+	this.$race=$('.race');
+	this.bird= new Bird();
+	this.alive=true;
+	this.timer=null;
+$(document).on('keydown', this.onKeyDown.bind(this));
+}
+Programm.prototype.onKeyDown=function(e){
+	this.bird.moving=true;
+	this.bird.getPos();
+	switch(e.keyCode){
+
+		case 38: //up
+			this.bird.$bird.css('top', parseInt(this.bird.posY-12)+'px');
+
+		break;
+
+		case 40: //down
+			this.bird.$bird.css('top', parseInt(this.bird.posY+1)+'px');
+		break;
+
+	}
+	setTimeout(function(){
+		this.bird.moving=false;	
+	}.bind(this), 50);
+	
+}
+Programm.prototype.start=function(){
+
+	this.$race.append(this.bird.$bird);
+	this.bird.fly();
+
+	
+	this.timer=setInterval(function(){
+			this.doPipes()
+		}.bind(this),3000);
+	
+}
+Programm.prototype.doPipes=function(){
+
+	this.pipes.push(new Pipes(this));
+}
+Programm.prototype.checkColision=function(pipe){
+	this.bird.getPos();
+	var rect1 = {x: this.bird.posX, y: this.bird.posY, width: this.bird.size.width, height: this.bird.size.height};
+
+	var pipeTopHeight=pipe.pipeTop[0].getBoundingClientRect().bottom-this.$race[0].getBoundingClientRect().top;
+	var rect2 = {x: pipe.posX-pipe.pipeTop.width(), y: 0, width: pipe.pipeTop.width(), height: pipeTopHeight};
+
+	var pipeBtmHeight=this.$race[0].getBoundingClientRect().bottom-pipe.pipeBtm[0].getBoundingClientRect().top;
+
+	var rect3 = {x: pipe.posX-pipe.pipeBtm.width(), y: pipe.pipeBtm[0].getBoundingClientRect().top, width: pipe.pipeBtm.width(), height: pipeBtmHeight};
+
+
+if ((rect1.x < rect2.x + rect2.width &&
+   rect1.x + rect1.width > rect2.x &&
+   rect1.y < rect2.y + rect2.height &&
+   rect1.height + rect1.y > rect2.y) 
+	
+	|| 
+	
+	(rect1.x < rect3.x + rect3.width &&
+   rect1.x + rect1.width > rect3.x &&
+   rect1.y < rect3.y + rect3.height &&
+   rect1.height + rect1.y > rect3.y)
+	){
+   this.stop();
+}
+
+}
+Programm.prototype.stop=function(){
+
+	for(var i=0; i<this.pipes.length; i++){
+
+		clearInterval(this.pipes[i].timer);
+	}
+	clearInterval(this.timer);
+	clearInterval(this.bird.timer);
+	alert('bim dans ta face');
+}
+var prog= new Programm();
+prog.start();
+</script>
+
+</body>
+
+</html>
